@@ -1,0 +1,18 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<h1><%= t('feature.feature_settings') %></h1>
+
+<div id="banner-admin">
+    <table>
+      <tr>
+        <th scope="row"><%= t('feature.feature_description') %>:</th>
+        <td><%= Spree::Feature::Config[:feature_content] %></td>
+      </tr>
+    </table>
+
+</div>
+
+<p>
+  <%= link_to_with_icon('edit', t(:edit), edit_admin_feature_settings_path) %>
+</p>
+

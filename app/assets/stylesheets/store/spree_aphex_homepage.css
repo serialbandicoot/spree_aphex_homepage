@@ -1,0 +1,91 @@
+/*
+ *= require store/spree_core
+*/
+
+#banner-slideshow .banner .tagline{
+
+}
+
+#banner-slideshow-main {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  height: 180px;
+  width: 322px;
+  text-align: center;
+  float: left;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #dddddd;
+  position: relative;
+  top: 6px;
+}
+#banner-slideshow {
+  position:absolute;
+  top:10px;
+  right:5px;
+  width:120px;
+  height: 178px;
+  /*border: 1px solid #dddddd;*/
+}
+
+#banner-slideshow-left {
+  position:absolute;
+  top:10px;
+  left:10px;
+  width:180px;
+  height: 178px;
+  text-align: justify;
+  /*border: 1px solid #dddddd;*/
+}
+
+#banner-admin textarea#styled {
+	width: 180px;
+	height: 180px;
+}
+
+#cupcake_decorations_border_with_slide_and_ticker {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #dddddd;
+  position:absolute;
+  top:50px;
+  right:25px;
+  width:140px;
+  height: 281px;
+  padding: 10px;
+}
+
+#cupcake_decorations_border_no_slide {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  height: 180px;
+  width: 140px;
+  text-align: center;
+  float: left;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #dddddd;
+  position: relative;
+  text-align: left;
+}
+
+
+#cupcake_decorations_border_with_slide_no_ticker {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #dddddd;
+  position:absolute;
+  top:18px;
+  right:25px;
+  width:140px;
+  height: 281px;
+  padding: 10px;
+}
+
+#cupcake_decoration_text {
+    text-align:justify;
+}

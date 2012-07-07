@@ -1,0 +1,1065 @@
+  [1m[36m (40.3ms)[0m  [1mselect owner_id, owner_type, name, value from spree_preferences where `key` is null[0m
+SQLite3::SQLException: no such table: spree_preferences: select owner_id, owner_type, name, value from spree_preferences where `key` is null
+  [1m[35m (0.1ms)[0m  select sqlite_version(*)
+  [1m[36m (3.5ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("schema_migrations")
+  [1m[36m (1.1ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35m (0.1ms)[0m  SELECT "schema_migrations"."version" FROM "schema_migrations" 
+Migrating to SpreeZeroNineZero (20120424213312)
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "addresses" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "firstname" varchar(255), "lastname" varchar(255), "address1" varchar(255), "address2" varchar(255), "city" varchar(255), "zipcode" varchar(255), "phone" varchar(255), "state_name" varchar(255), "alternative_phone" varchar(255), "state_id" integer, "country_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "adjustment_source_id" integer, "amount" decimal(8,2) DEFAULT 0.0 NOT NULL, "type" varchar(255), "description" varchar(255), "adjustment_source_type" varchar(255), "secondary_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "assets" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "viewable_id" integer, "attachment_width" integer, "attachment_height" integer, "attachment_size" integer, "position" integer, "viewable_type" varchar(50), "attachment_content_type" varchar(255), "attachment_file_name" varchar(255), "type" varchar(75), "attachment_updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "calculators" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "calculable_id" integer NOT NULL, "calculable_type" varchar(255) NOT NULL, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "checkouts" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "order_id" integer, "email" varchar(255), "ip_address" varchar(255), "special_instructions" text, "bill_address_id" integer, "completed_at" datetime, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "configurations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "type" varchar(50), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("configurations")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_configurations_on_name_and_type" ON "configurations" ("name", "type")
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "countries" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "iso_name" varchar(255), "iso" varchar(255), "iso3" varchar(255), "name" varchar(255), "numcode" integer) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "coupons" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "code" varchar(255), "description" varchar(255), "usage_limit" integer, "combine" boolean, "expires_at" datetime, "starts_at" datetime, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "creditcard_txns" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "creditcard_payment_id" integer, "txn_type" integer, "amount" decimal(8,2) DEFAULT 0.0 NOT NULL, "response_code" varchar(255), "avs_response" text, "cvv_response" text, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "creditcards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" text, "verification_value" text, "month" varchar(255), "year" varchar(255), "cc_type" varchar(255), "display_number" varchar(255), "first_name" varchar(255), "last_name" varchar(255), "start_month" varchar(255), "start_year" varchar(255), "issue_number" varchar(255), "address_id" integer, "checkout_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "gateway_configurations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "gateway_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "gateway_option_values" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "gateway_configuration_id" integer, "gateway_option_id" integer, "value" text, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "gateway_options" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "description" text, "textarea" boolean DEFAULT 'f', "gateway_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "gateways" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "clazz" varchar(255), "name" varchar(255), "description" text, "active" boolean, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "inventory_units" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "lock_version" integer DEFAULT 0, "state" varchar(255), "variant_id" integer, "order_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "line_items" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "order_id" integer, "variant_id" integer, "quantity" integer NOT NULL, "price" decimal(8,2) NOT NULL, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("line_items")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_line_items_on_order_id" ON "line_items" ("order_id")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("line_items")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_line_items_on_order_id')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_line_items_on_variant_id" ON "line_items" ("variant_id")[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "option_types" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "presentation" varchar(100), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "option_types_prototypes" ("prototype_id" integer, "option_type_id" integer) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "option_values" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "name" varchar(255), "presentation" varchar(255), "option_type_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "option_values_variants" ("variant_id" integer, "option_value_id" integer) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("option_values_variants")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_option_values_variants_on_variant_id" ON "option_values_variants" ("variant_id")[0m
+  [1m[35m (0.4ms)[0m  CREATE TABLE "orders" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" varchar(15), "item_total" decimal(8,2) DEFAULT 0.0 NOT NULL, "total" decimal(8,2) DEFAULT 0.0 NOT NULL, "state" varchar(255), "token" varchar(255), "adjustment_total" decimal(8,2) DEFAULT 0.0 NOT NULL, "credit_total" decimal(8,2) DEFAULT 0.0 NOT NULL, "user_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("orders")[0m
+  [1m[35m (0.4ms)[0m  CREATE INDEX "index_orders_on_number" ON "orders" ("number")
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal(8,2) DEFAULT 0.0 NOT NULL, "type" varchar(255), "order_id" integer, "creditcard_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "attribute" varchar(100) NOT NULL, "owner_id" integer(30) NOT NULL, "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("preferences")[0m
+  [1m[35m (0.6ms)[0m  CREATE UNIQUE INDEX "index_preferences_on_owner_and_attribute_and_preference" ON "preferences" ("owner_id", "owner_type", "attribute", "group_id", "group_type")
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "product_option_types" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "product_id" integer, "option_type_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "product_properties" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "value" varchar(255), "product_id" integer, "property_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "products" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255) DEFAULT '' NOT NULL, "description" text, "available_on" datetime, "deleted_at" datetime, "permalink" varchar(255), "meta_description" varchar(255), "meta_keywords" varchar(255), "tax_category_id" integer, "shipping_category_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("products")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_products_on_available_on" ON "products" ("available_on")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("products")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_products_on_available_on')[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_products_on_deleted_at" ON "products" ("deleted_at")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("products")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_products_on_deleted_at')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_products_on_available_on')[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_products_on_name" ON "products" ("name")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("products")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_products_on_name')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_products_on_deleted_at')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_products_on_available_on')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_products_on_permalink" ON "products" ("permalink")[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "products_taxons" ("product_id" integer, "taxon_id" integer) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("products_taxons")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_products_taxons_on_product_id" ON "products_taxons" ("product_id")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("products_taxons")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_products_taxons_on_product_id')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_products_taxons_on_taxon_id" ON "products_taxons" ("taxon_id")[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "properties" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "presentation" varchar(255) NOT NULL, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "properties_prototypes" ("prototype_id" integer, "property_id" integer) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "prototypes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "roles" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255)) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "roles_users" ("role_id" integer, "user_id" integer) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("roles_users")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_roles_users_on_role_id" ON "roles_users" ("role_id")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("roles_users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_roles_users_on_role_id')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_roles_users_on_user_id" ON "roles_users" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "shipments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "tracking" varchar(255), "number" varchar(255), "cost" decimal(8,2), "shipped_at" datetime, "order_id" integer, "shipping_method_id" integer, "address_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "shipping_categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "shipping_methods" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "zone_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "state_events" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "previous_state" varchar(255), "order_id" integer, "user_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "states" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "abbr" varchar(255), "country_id" integer) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "tax_categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "description" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "tax_rates" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal(8,4), "zone_id" integer, "tax_category_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "taxonomies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255) NOT NULL, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (1.1ms)[0m  CREATE TABLE "taxons" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "parent_id" integer, "position" integer DEFAULT 0, "name" varchar(255) NOT NULL, "permalink" varchar(255), "taxonomy_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128) DEFAULT '' NOT NULL, "salt" varchar(128) DEFAULT '' NOT NULL, "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "variants" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "sku" varchar(255) DEFAULT '' NOT NULL, "price" decimal(8,2) NOT NULL, "weight" decimal(8,2), "height" decimal(8,2), "width" decimal(8,2), "depth" decimal(8,2), "deleted_at" datetime, "is_master" boolean DEFAULT 'f', "product_id" integer) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("variants")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_variants_on_product_id" ON "variants" ("product_id")
+  [1m[36m (0.6ms)[0m  [1mCREATE TABLE "zone_members" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "zoneable_id" integer, "zoneable_type" varchar(255), "zone_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "zones" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "description" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213312')[0m
+Migrating to CreateIndexesForInventoryUnits (20120424213313)
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("inventory_units")
+  [1m[36m (0.4ms)[0m  [1mCREATE INDEX "index_inventory_units_on_variant_id" ON "inventory_units" ("variant_id")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("inventory_units")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_inventory_units_on_variant_id')[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_inventory_units_on_order_id" ON "inventory_units" ("order_id")
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213313')[0m
+Migrating to AddCountOnHandToVariantsAndProducts (20120424213314)
+  [1m[35m (0.5ms)[0m  ALTER TABLE "variants" ADD "count_on_hand" integer DEFAULT 0 NOT NULL
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "products" ADD "count_on_hand" integer DEFAULT 0 NOT NULL[0m
+  [1m[35mSpree::Variant Load (0.1ms)[0m  SELECT "variants".* FROM "variants" 
+  [1m[36mSpree::Product Load (0.1ms)[0m  [1mSELECT "products".* FROM "products" [0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213314')
+Migrating to ChangeTaxonsToNestedSet (20120424213315)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "taxons" ADD "lft" integer[0m
+  [1m[35m (0.2ms)[0m  ALTER TABLE "taxons" ADD "rgt" integer
+  [1m[36mSpree::Taxon Load (0.2ms)[0m  [1mSELECT "taxons".* FROM "taxons" WHERE "taxons"."parent_id" IS NULL ORDER BY position ASC[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213315')
+Migrating to MoveToConfigurableGateways (20120424213316)
+  [1m[36m (0.4ms)[0m  [1mDROP TABLE "gateways"[0m
+  [1m[35m (0.5ms)[0m  DROP TABLE "gateway_options"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "gateway_option_values"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "gateway_configurations"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "gateways" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255), "description" text, "active" boolean DEFAULT 't', "environment" varchar(255) DEFAULT 'development', "server" varchar(255) DEFAULT 'test', "test_mode" boolean DEFAULT 't', "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213316')
+Migrating to ProductGroupsAndScopes (20120424213317)
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "product_groups" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "permalink" varchar(255), "order" varchar(255)) [0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "product_scopes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "arguments" text, "product_group_id" integer) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("product_groups")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_product_groups_on_name" ON "product_groups" ("name")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("product_groups")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_product_groups_on_name')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_product_groups_on_permalink" ON "product_groups" ("permalink")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("product_scopes")
+  [1m[36m (0.3ms)[0m  [1mCREATE INDEX "index_product_scopes_on_name" ON "product_scopes" ("name")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("product_scopes")
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_info('index_product_scopes_on_name')[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_product_scopes_on_product_group_id" ON "product_scopes" ("product_group_id")
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213317')[0m
+Migrating to AddOpenIdAuthenticationTables (20120424213318)
+  [1m[35m (0.5ms)[0m  CREATE TABLE "open_id_authentication_associations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "issued" integer, "lifetime" integer, "handle" varchar(255), "assoc_type" varchar(255), "server_url" blob, "secret" blob) 
+  [1m[36m (0.4ms)[0m  [1mCREATE TABLE "open_id_authentication_nonces" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "timestamp" integer NOT NULL, "server_url" varchar(255), "salt" varchar(255) NOT NULL) [0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213318')
+Migrating to AddOpenidFieldToUsers (20120424213319)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "users" ADD "openid_identifier" varchar(255)[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("users")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_users_on_openid_identifier" ON "users" ("openid_identifier")[0m
+  [1m[35m (0.7ms)[0m  CREATE TEMPORARY TABLE "altered_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128) DEFAULT '' NOT NULL, "salt" varchar(128) DEFAULT '' NOT NULL, "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_openid_identifier')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_users")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "temp_index_altered_users_on_openid_identifier" ON "altered_users" ("openid_identifier")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "users"[0m
+  [1m[35m (0.5ms)[0m  DROP TABLE "users"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128) DEFAULT '' NOT NULL, "salt" varchar(128) DEFAULT '' NOT NULL, "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_users_on_openid_identifier')[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("users")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_users_on_openid_identifier" ON "users" ("openid_identifier")[0m
+  [1m[35m (0.2ms)[0m  SELECT * FROM "altered_users"
+  [1m[36m (8.7ms)[0m  [1mDROP TABLE "altered_users"[0m
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128) DEFAULT '' NOT NULL, "salt" varchar(128) DEFAULT '' NOT NULL, "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_openid_identifier')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_users")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "temp_index_altered_users_on_openid_identifier" ON "altered_users" ("openid_identifier")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "users"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "users"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128), "salt" varchar(128) DEFAULT '' NOT NULL, "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_users_on_openid_identifier')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("users")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_users_on_openid_identifier" ON "users" ("openid_identifier")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_users"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_users"[0m
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128), "salt" varchar(128) DEFAULT '' NOT NULL, "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_openid_identifier')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_users")[0m
+  [1m[35m (0.1ms)[0m  CREATE INDEX "temp_index_altered_users_on_openid_identifier" ON "altered_users" ("openid_identifier")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "users"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "users"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128), "salt" varchar(128), "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_users_on_openid_identifier')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("users")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_users_on_openid_identifier" ON "users" ("openid_identifier")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_users"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_users"[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213319')
+Migrating to ChangePreferenceValueType (20120424213320)
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("preferences")[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_info('index_preferences_on_owner_and_attribute_and_preference')
+  [1m[36m (0.4ms)[0m  [1mDROP INDEX "index_preferences_on_owner_and_attribute_and_preference"[0m
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "attribute" varchar(100) NOT NULL, "owner_id" integer(30) NOT NULL, "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("preferences")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "preferences"
+  [1m[36m (0.5ms)[0m  [1mDROP TABLE "preferences"[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "attribute" varchar(100) NOT NULL, "owner_id" integer(30) NOT NULL, "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_preferences")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_preferences"
+  [1m[36m (0.1ms)[0m  [1mDROP TABLE "altered_preferences"[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213320')
+Migrating to CreateBillingIntegrations (20120424213321)
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "billing_integrations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255), "description" text, "active" boolean DEFAULT 't', "environment" varchar(255) DEFAULT 'development', "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213321')
+Migrating to ChargeRefactoring (20120424213322)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "orders" ADD "completed_at" datetime[0m
+  [1m[35mOrder Load (0.1ms)[0m  SELECT "orders".* FROM "orders" 
+  [1m[36m (0.2ms)[0m  [1mCREATE TEMPORARY TABLE "altered_checkouts" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "order_id" integer, "email" varchar(255), "ip_address" varchar(255), "special_instructions" text, "bill_address_id" integer, "completed_at" datetime, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("checkouts")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "checkouts"[0m
+  [1m[35m (0.5ms)[0m  DROP TABLE "checkouts"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "checkouts" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "order_id" integer, "email" varchar(255), "ip_address" varchar(255), "special_instructions" text, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_checkouts")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "altered_checkouts"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "altered_checkouts"
+  [1m[36m (0.2ms)[0m  [1mCREATE TEMPORARY TABLE "altered_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "adjustment_source_id" integer, "amount" decimal DEFAULT 0.0 NOT NULL, "type" varchar(255), "description" varchar(255), "adjustment_source_type" varchar(255), "secondary_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("adjustments")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "adjustments"[0m
+  [1m[35m (0.3ms)[0m  DROP TABLE "adjustments"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "adjustment_source_id" integer, "amount" decimal, "type" varchar(255), "description" varchar(255), "adjustment_source_type" varchar(255), "secondary_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_adjustments")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "altered_adjustments"[0m
+  [1m[35m (0.1ms)[0m  DROP TABLE "altered_adjustments"
+  [1m[36mSQL (0.1ms)[0m  [1mUPDATE "adjustments" SET "type" = 'secondary_type'[0m
+  [1m[35mSQL (0.1ms)[0m  UPDATE "adjustments" SET "type" = 'CouponCredit' WHERE "adjustments"."type" = 'Credit'
+  [1m[36m (0.2ms)[0m  [1mCREATE TEMPORARY TABLE "altered_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "adjustment_source_id" integer, "amount" decimal, "type" varchar(255), "description" varchar(255), "adjustment_source_type" varchar(255), "secondary_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("adjustments")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "adjustments"[0m
+  [1m[35m (0.3ms)[0m  DROP TABLE "adjustments"
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "adjustment_source_id" integer, "amount" decimal, "type" varchar(255), "description" varchar(255), "adjustment_source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_adjustments")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "altered_adjustments"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "altered_adjustments"
+  [1m[36m (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213322')[0m
+Migrating to AddSomeIndexes (20120424213323)
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("taxons")
+  [1m[36m (0.4ms)[0m  [1mCREATE INDEX "index_taxons_on_permalink" ON "taxons" ("permalink")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("taxons")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_taxons_on_permalink')[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_taxons_on_parent_id" ON "taxons" ("parent_id")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("taxons")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_taxons_on_parent_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_taxons_on_permalink')[0m
+  [1m[35m (1.1ms)[0m  CREATE INDEX "index_taxons_on_taxonomy_id" ON "taxons" ("taxonomy_id")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("assets")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_assets_on_viewable_id" ON "assets" ("viewable_id")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("assets")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_assets_on_viewable_id')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_assets_on_viewable_type_and_type" ON "assets" ("viewable_type", "type")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("product_properties")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_product_properties_on_product_id" ON "product_properties" ("product_id")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("option_values_variants")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_option_values_variants_on_variant_id')[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_option_values_variants_on_variant_id_and_option_value_id" ON "option_values_variants" ("variant_id", "option_value_id")
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213323')[0m
+Migrating to CheckoutStateMachine (20120424213324)
+  [1m[35m (0.6ms)[0m  ALTER TABLE "checkouts" ADD "state" varchar(255)
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213324')[0m
+Migrating to StateForShipments (20120424213325)
+  [1m[35m (0.7ms)[0m  ALTER TABLE "shipments" ADD "state" varchar(255)
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213325')[0m
+Migrating to MakeStateEventsPolymorphic (20120424213326)
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_state_events" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "previous_state" varchar(255), "stateful_id" integer, "user_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("state_events")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "state_events"
+  [1m[36m (0.4ms)[0m  [1mDROP TABLE "state_events"[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "state_events" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "previous_state" varchar(255), "stateful_id" integer, "user_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_state_events")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_state_events"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_state_events"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "state_events" ADD "stateful_type" varchar(255)
+  [1m[36m (0.1ms)[0m  [1mUPDATE state_events SET stateful_type = 'Order'[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213326')
+Migrating to ShipAddressIdForCheckouts (20120424213327)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "checkouts" ADD "ship_address_id" integer[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213327')
+Migrating to ShippingMethodIdForCheckouts (20120424213328)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "checkouts" ADD "shipping_method_id" integer[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213328')
+Migrating to CreditcardLastFourDigits (20120424213329)
+  [1m[36m (0.3ms)[0m  [1mCREATE TEMPORARY TABLE "altered_creditcards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" text, "verification_value" text, "month" varchar(255), "year" varchar(255), "cc_type" varchar(255), "last_digits" varchar(255), "first_name" varchar(255), "last_name" varchar(255), "start_month" varchar(255), "start_year" varchar(255), "issue_number" varchar(255), "address_id" integer, "checkout_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("creditcards")
+  [1m[36m (0.2ms)[0m  [1mSELECT * FROM "creditcards"[0m
+  [1m[35m (0.4ms)[0m  DROP TABLE "creditcards"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "creditcards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" text, "verification_value" text, "month" varchar(255), "year" varchar(255), "cc_type" varchar(255), "last_digits" varchar(255), "first_name" varchar(255), "last_name" varchar(255), "start_month" varchar(255), "start_year" varchar(255), "issue_number" varchar(255), "address_id" integer, "checkout_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("altered_creditcards")
+  [1m[36m (0.2ms)[0m  [1mSELECT * FROM "altered_creditcards"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "altered_creditcards"
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM creditcards[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213329')
+Migrating to PopulateLegacyShipmentState (20120424213330)
+  [1m[36m (0.2ms)[0m  [1mSELECT * FROM shipments[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213330')
+Migrating to AddCostPrice (20120424213331)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "variants" ADD "cost_price" decimal(8,2) DEFAULT NULL[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213331')
+Migrating to ShipmentIdForInventoryUnits (20120424213332)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "inventory_units" ADD "shipment_id" integer[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("inventory_units")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_inventory_units_on_order_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_inventory_units_on_variant_id')
+  [1m[36m (0.7ms)[0m  [1mCREATE INDEX "index_inventory_units_on_shipment_id" ON "inventory_units" ("shipment_id")[0m
+  [1m[35mSpree::Shipment Load (0.1ms)[0m  SELECT "shipments".* FROM "shipments" 
+  [1m[36m (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213332')[0m
+Migrating to CimFieldsForCreditcards (20120424213333)
+  [1m[35m (0.6ms)[0m  ALTER TABLE "creditcards" ADD "gateway_customer_profile_id" varchar(255)
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "creditcards" ADD "gateway_payment_profile_id" varchar(255)[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213333')
+Migrating to CreateReturnAuthorizations (20120424213334)
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "return_authorizations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" varchar(255), "state" varchar(255), "amount" decimal(8,2) DEFAULT 0.0 NOT NULL, "order_id" integer, "reason" text, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213334')
+Migrating to AddReturnAuthorizationToInventoryUnits (20120424213335)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "inventory_units" ADD "return_authorization_id" integer[0m
+  [1m[35m (0.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213335')
+Migrating to CreateTrackers (20120424213336)
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "trackers" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "environment" varchar(255), "analytics_id" varchar(255), "active" boolean DEFAULT 't', "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213336')
+Migrating to CreditcardIdForCreditcardTxns (20120424213337)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "creditcard_txns" ADD "creditcard_id" integer[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213337')
+Migrating to OriginalCreditcardTxnIdForCreditcardTxns (20120424213338)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "creditcard_txns" ADD "original_creditcard_txn_id" integer[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213338')
+Migrating to AddTestModeToBillingIntegration (20120424213339)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "billing_integrations" ADD "test_mode" boolean DEFAULT 't'[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "billing_integrations" ADD "server" varchar(255) DEFAULT 'test'
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213339')[0m
+Migrating to CreateProductsProductGroups (20120424213340)
+  [1m[35m (0.5ms)[0m  CREATE TABLE "product_groups_products" ("product_id" integer, "product_group_id" integer) 
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213340')[0m
+Migrating to CreatePaymentMethods (20120424213341)
+  [1m[35m (0.5ms)[0m  CREATE TABLE "payment_methods" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255), "description" text, "active" boolean DEFAULT 't', "environment" varchar(255) DEFAULT 'development', "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213341')[0m
+Migrating to PolymorphicPayments (20120424213342)
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "type" varchar(255), "order_id" integer, "creditcard_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "payments"
+  [1m[36m (0.5ms)[0m  [1mDROP TABLE "payments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "order_id" integer, "creditcard_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_payments"
+  [1m[36m (0.1ms)[0m  [1mDROP TABLE "altered_payments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "order_id" integer, "creditcard_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "payments"
+  [1m[36m (0.5ms)[0m  [1mDROP TABLE "payments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "order_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_payments"
+  [1m[36m (0.1ms)[0m  [1mDROP TABLE "altered_payments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "payable_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "payments"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "payments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "payable_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_payments"
+  [1m[36m (0.4ms)[0m  [1mDROP TABLE "altered_payments"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "payments" ADD "payable_type" varchar(255)
+  [1m[36m (0.2ms)[0m  [1mALTER TABLE "payments" ADD "payment_method" varchar(255)[0m
+  [1m[35m (0.2ms)[0m  ALTER TABLE "payments" ADD "source_id" integer
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "payments" ADD "source_type" varchar(255)[0m
+  [1m[35m (0.1ms)[0m  UPDATE payments SET payable_type = 'Order'
+  [1m[36mSpree::Creditcard Load (0.2ms)[0m  [1mSELECT "creditcards".* FROM "creditcards" [0m
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_creditcards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" text, "verification_value" text, "month" varchar(255), "year" varchar(255), "cc_type" varchar(255), "last_digits" varchar(255), "first_name" varchar(255), "last_name" varchar(255), "start_month" varchar(255), "start_year" varchar(255), "issue_number" varchar(255), "address_id" integer, "checkout_id" integer, "created_at" datetime, "updated_at" datetime, "gateway_customer_profile_id" varchar(255), "gateway_payment_profile_id" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("creditcards")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "creditcards"
+  [1m[36m (0.3ms)[0m  [1mDROP TABLE "creditcards"[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "creditcards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" text, "verification_value" text, "month" varchar(255), "year" varchar(255), "cc_type" varchar(255), "last_digits" varchar(255), "first_name" varchar(255), "last_name" varchar(255), "start_month" varchar(255), "start_year" varchar(255), "issue_number" varchar(255), "address_id" integer, "created_at" datetime, "updated_at" datetime, "gateway_customer_profile_id" varchar(255), "gateway_payment_profile_id" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_creditcards")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_creditcards"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_creditcards"[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213342')
+Migrating to ChangePaymentsPaymentMethodToBelongsTo (20120424213343)
+  [1m[36m (0.3ms)[0m  [1mCREATE TEMPORARY TABLE "altered_payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "payable_id" integer, "created_at" datetime, "updated_at" datetime, "payable_type" varchar(255), "payment_method" varchar(255), "source_id" integer, "source_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("payments")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "payments"[0m
+  [1m[35m (0.4ms)[0m  DROP TABLE "payments"
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "payable_id" integer, "created_at" datetime, "updated_at" datetime, "payable_type" varchar(255), "source_id" integer, "source_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_payments")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "altered_payments"[0m
+  [1m[35m (0.1ms)[0m  DROP TABLE "altered_payments"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "payments" ADD "payment_method_id" integer[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213343')
+Migrating to AssignCreditcardTxnsToPayment (20120424213344)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "creditcard_txns" ADD "payment_id" integer[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM creditcard_txns
+  [1m[36m (0.2ms)[0m  [1mCREATE TEMPORARY TABLE "altered_creditcard_txns" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "creditcard_payment_id" integer, "txn_type" integer, "amount" decimal DEFAULT 0.0 NOT NULL, "response_code" varchar(255), "avs_response" text, "cvv_response" text, "created_at" datetime, "updated_at" datetime, "creditcard_id" integer, "original_creditcard_txn_id" integer, "payment_id" integer) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("creditcard_txns")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "creditcard_txns"[0m
+  [1m[35m (0.5ms)[0m  DROP TABLE "creditcard_txns"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "creditcard_txns" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "txn_type" integer, "amount" decimal DEFAULT 0.0 NOT NULL, "response_code" varchar(255), "avs_response" text, "cvv_response" text, "created_at" datetime, "updated_at" datetime, "creditcard_id" integer, "original_creditcard_txn_id" integer, "payment_id" integer) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_creditcard_txns")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "altered_creditcard_txns"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "altered_creditcard_txns"
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213344')[0m
+Migrating to StiForTransactions (20120424213345)
+  [1m[35m (0.6ms)[0m  ALTER TABLE "creditcard_txns" RENAME TO "transactions"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "transactions" ADD "type" varchar(255)[0m
+  [1m[35m (0.8ms)[0m  CREATE TEMPORARY TABLE "altered_transactions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "txn_type" integer, "amount" decimal DEFAULT 0.0 NOT NULL, "response_code" varchar(255), "avs_response" text, "cvv_response" text, "created_at" datetime, "updated_at" datetime, "creditcard_id" integer, "original_creditcard_txn_id" integer, "payment_id" integer, "type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("transactions")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "transactions"
+  [1m[36m (0.5ms)[0m  [1mDROP TABLE "transactions"[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "transactions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "txn_type" integer, "amount" decimal DEFAULT 0.0 NOT NULL, "response_code" varchar(255), "avs_response" text, "cvv_response" text, "created_at" datetime, "updated_at" datetime, "original_creditcard_txn_id" integer, "payment_id" integer, "type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_transactions")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_transactions"
+  [1m[36m (0.3ms)[0m  [1mDROP TABLE "altered_transactions"[0m
+  [1m[35m (0.1ms)[0m  UPDATE transactions SET type = 'CreditcardTxn'
+  [1m[36m (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213345')[0m
+Migrating to DropBillingIntegrations (20120424213346)
+  [1m[35m (0.4ms)[0m  DROP TABLE "billing_integrations"
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213346')[0m
+Migrating to DeletedAtForPaymentMethods (20120424213347)
+  [1m[35m (0.6ms)[0m  ALTER TABLE "payment_methods" ADD "deleted_at" datetime DEFAULT NULL
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213347')[0m
+Migrating to AddAdjustmentsIndex (20120424213348)
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("adjustments")
+  [1m[36m (0.4ms)[0m  [1mCREATE INDEX "index_adjustments_on_order_id" ON "adjustments" ("order_id")[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213348')
+Migrating to FixByPopularity (20120424213349)
+  [1m[36m (0.1ms)[0m  [1mUPDATE product_scopes SET name='descend_by_popularity' WHERE name='by_popularity'[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213349')
+Migrating to AddAltTextToImages (20120424213350)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "assets" ADD "alt" text[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213350')
+Migrating to FixExistingCouponCredits (20120424213351)
+  [1m[36m (0.1ms)[0m  [1mUPDATE adjustments SET type='PromotionCredit' WHERE type='CouponCredit'[0m
+  [1m[35m (0.1ms)[0m  UPDATE adjustments SET adjustment_source_type='Promotion' WHERE adjustment_source_type='Coupon'
+  [1m[36m (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213351')[0m
+Migrating to AddDisplayToPaymentMethods (20120424213352)
+  [1m[35m (0.5ms)[0m  ALTER TABLE "payment_methods" ADD "display" varchar(255) DEFAULT NULL
+  [1m[36m (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213352')[0m
+Migrating to AddAddressesCheckoutsIndexes (20120424213353)
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("addresses")
+  [1m[36m (0.4ms)[0m  [1mCREATE INDEX "index_addresses_on_firstname" ON "addresses" ("firstname")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("addresses")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_addresses_on_firstname')[0m
+  [1m[35m (0.3ms)[0m  CREATE INDEX "index_addresses_on_lastname" ON "addresses" ("lastname")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("checkouts")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_checkouts_on_order_id" ON "checkouts" ("order_id")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("checkouts")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_checkouts_on_order_id')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_checkouts_on_bill_address_id" ON "checkouts" ("bill_address_id")[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213353')
+Migrating to AddIconToTaxons (20120424213354)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "taxons" ADD "icon_file_name" varchar(255)[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "taxons" ADD "icon_content_type" varchar(255)
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "taxons" ADD "icon_file_size" integer[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "taxons" ADD "icon_updated_at" datetime
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213354')[0m
+Migrating to AddDescriptionToTaxons (20120424213355)
+  [1m[35m (0.5ms)[0m  ALTER TABLE "taxons" ADD "description" text
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213355')[0m
+Migrating to IndexForShipmentsNumber (20120424213356)
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("shipments")
+  [1m[36m (0.4ms)[0m  [1mCREATE INDEX "index_shipments_on_number" ON "shipments" ("number")[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213356')
+Migrating to AddIndexOnUsersPersistenceToken (20120424213357)
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_openid_identifier')
+  [1m[36m (0.4ms)[0m  [1mCREATE INDEX "index_users_on_persistence_token" ON "users" ("persistence_token")[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213357')
+Migrating to AddDefaultToTaxCategories (20120424213358)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "tax_categories" ADD "is_default" boolean DEFAULT 'f'[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213358')
+Migrating to AddDisplayToShippingMethods (20120424213359)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "shipping_methods" ADD "display_on" varchar(255) DEFAULT NULL[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213359')
+Migrating to RenamePaymentMethodDisplay (20120424213360)
+  [1m[36m (0.3ms)[0m  [1mCREATE TEMPORARY TABLE "altered_payment_methods" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255), "description" text, "active" boolean DEFAULT 't', "environment" varchar(255) DEFAULT 'development', "created_at" datetime, "updated_at" datetime, "deleted_at" datetime, "display_on" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("payment_methods")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "payment_methods"[0m
+  [1m[35m (0.4ms)[0m  DROP TABLE "payment_methods"
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "payment_methods" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255), "description" text, "active" boolean DEFAULT 't', "environment" varchar(255) DEFAULT 'development', "created_at" datetime, "updated_at" datetime, "deleted_at" datetime, "display_on" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_payment_methods")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "altered_payment_methods"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "altered_payment_methods"
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213360')[0m
+Migrating to RenamePreferencesField (20120424213361)
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100) NOT NULL, "owner_id" integer(30) NOT NULL, "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("preferences")[0m
+  [1m[35m (0.2ms)[0m  SELECT * FROM "preferences"
+  [1m[36m (0.4ms)[0m  [1mDROP TABLE "preferences"[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100) NOT NULL, "owner_id" integer(30) NOT NULL, "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_preferences")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_preferences"
+  [1m[36m (0.1ms)[0m  [1mDROP TABLE "altered_preferences"[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213361')
+Migrating to AddGuestFlag (20120424213362)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "users" ADD "guest" boolean[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213362')
+Migrating to DropOrderToken (20120424213363)
+  [1m[36m (0.3ms)[0m  [1mCREATE TEMPORARY TABLE "altered_orders" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" varchar(15), "item_total" decimal DEFAULT 0.0 NOT NULL, "total" decimal DEFAULT 0.0 NOT NULL, "state" varchar(255), "token" varchar(255), "adjustment_total" decimal DEFAULT 0.0 NOT NULL, "credit_total" decimal DEFAULT 0.0 NOT NULL, "user_id" integer, "created_at" datetime, "updated_at" datetime, "completed_at" datetime) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("orders")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_orders_on_number')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_orders")
+  [1m[36m (0.1ms)[0m  [1mCREATE INDEX "temp_index_altered_orders_on_number" ON "altered_orders" ("number")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "orders"
+  [1m[36m (0.4ms)[0m  [1mDROP TABLE "orders"[0m
+  [1m[35m (0.4ms)[0m  CREATE TABLE "orders" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" varchar(15), "item_total" decimal DEFAULT 0.0 NOT NULL, "total" decimal DEFAULT 0.0 NOT NULL, "state" varchar(255), "adjustment_total" decimal DEFAULT 0.0 NOT NULL, "credit_total" decimal DEFAULT 0.0 NOT NULL, "user_id" integer, "created_at" datetime, "updated_at" datetime, "completed_at" datetime) 
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("altered_orders")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('temp_index_altered_orders_on_number')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("orders")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_orders_on_number" ON "orders" ("number")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "altered_orders"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "altered_orders"
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213363')[0m
+Migrating to PaymentsStateAndAssignedToOrderOnly (20120424213364)
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "order_id" integer, "created_at" datetime, "updated_at" datetime, "payable_type" varchar(255), "source_id" integer, "source_type" varchar(255), "payment_method_id" integer) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "payments"
+  [1m[36m (0.4ms)[0m  [1mDROP TABLE "payments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "order_id" integer, "created_at" datetime, "updated_at" datetime, "payable_type" varchar(255), "source_id" integer, "source_type" varchar(255), "payment_method_id" integer) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_payments"
+  [1m[36m (0.1ms)[0m  [1mDROP TABLE "altered_payments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "order_id" integer, "created_at" datetime, "updated_at" datetime, "payable_type" varchar(255), "source_id" integer, "source_type" varchar(255), "payment_method_id" integer) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "payments"
+  [1m[36m (0.5ms)[0m  [1mDROP TABLE "payments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "payments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal DEFAULT 0.0 NOT NULL, "order_id" integer, "created_at" datetime, "updated_at" datetime, "source_id" integer, "source_type" varchar(255), "payment_method_id" integer) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_payments")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_payments"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_payments"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "payments" ADD "state" varchar(255)
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213364')[0m
+Migrating to CreateAddressKeysForOrder (20120424213365)
+  [1m[35m (0.5ms)[0m  ALTER TABLE "orders" ADD "bill_address_id" integer
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "orders" ADD "ship_address_id" integer[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213365')
+Migrating to PaymentTotalForOrders (20120424213366)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "orders" ADD "payment_total" decimal(8,2) DEFAULT 0.0[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213366')
+Migrating to ShippingMethodIdForOrders (20120424213367)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "orders" ADD "shipping_method_id" integer[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213367')
+Migrating to AddShipmentAndPaymentState (20120424213368)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "orders" ADD "shipment_state" varchar(255)[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "orders" ADD "payment_state" varchar(255)
+  [1m[36m (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213368')[0m
+Migrating to RefactorAdjustments (20120424213369)
+  [1m[35m (0.6ms)[0m  ALTER TABLE "adjustments" ADD "mandatory" boolean
+  [1m[36m (0.4ms)[0m  [1mALTER TABLE "adjustments" ADD "frozen" boolean[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "source_id" integer, "amount" decimal, "type" varchar(255), "description" varchar(255), "adjustment_source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("adjustments")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_adjustments_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_adjustments")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "temp_index_altered_adjustments_on_order_id" ON "altered_adjustments" ("order_id")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "adjustments"[0m
+  [1m[35m (0.6ms)[0m  DROP TABLE "adjustments"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "source_id" integer, "amount" decimal, "type" varchar(255), "description" varchar(255), "adjustment_source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_adjustments")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_adjustments_on_order_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("adjustments")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_adjustments_on_order_id" ON "adjustments" ("order_id")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_adjustments"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_adjustments"[0m
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "source_id" integer, "amount" decimal, "type" varchar(255), "description" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean) 
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("adjustments")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_adjustments_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_adjustments")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "temp_index_altered_adjustments_on_order_id" ON "altered_adjustments" ("order_id")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "adjustments"[0m
+  [1m[35m (0.3ms)[0m  DROP TABLE "adjustments"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "source_id" integer, "amount" decimal, "type" varchar(255), "description" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean) [0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("altered_adjustments")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_adjustments_on_order_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("adjustments")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_adjustments_on_order_id" ON "adjustments" ("order_id")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_adjustments"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_adjustments"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "adjustments" ADD "originator_id" integer
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "adjustments" ADD "originator_type" varchar(255)[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "source_id" integer, "amount" decimal, "type" varchar(255), "description" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean, "originator_id" integer, "originator_type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("adjustments")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_adjustments_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_adjustments")[0m
+  [1m[35m (0.1ms)[0m  CREATE INDEX "temp_index_altered_adjustments_on_order_id" ON "altered_adjustments" ("order_id")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "adjustments"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "adjustments"
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "source_id" integer, "amount" decimal, "description" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean, "originator_id" integer, "originator_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_adjustments")
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_info('temp_index_altered_adjustments_on_order_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("adjustments")
+  [1m[36m (0.8ms)[0m  [1mCREATE INDEX "index_adjustments_on_order_id" ON "adjustments" ("order_id")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_adjustments"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_adjustments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "source_id" integer, "amount" decimal, "label" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean, "originator_id" integer, "originator_type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("adjustments")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_adjustments_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_adjustments")[0m
+  [1m[35m (0.1ms)[0m  CREATE INDEX "temp_index_altered_adjustments_on_order_id" ON "altered_adjustments" ("order_id")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "adjustments"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "adjustments"
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "source_id" integer, "amount" decimal, "label" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean, "originator_id" integer, "originator_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_adjustments")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_adjustments_on_order_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("adjustments")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_adjustments_on_order_id" ON "adjustments" ("order_id")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_adjustments"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_adjustments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "position" integer, "source_id" integer, "amount" decimal, "label" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean, "originator_id" integer, "originator_type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("adjustments")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_adjustments_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_adjustments")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "temp_index_altered_adjustments_on_order_id" ON "altered_adjustments" ("order_id")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "adjustments"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "adjustments"
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "source_id" integer, "amount" decimal, "label" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "frozen" boolean, "originator_id" integer, "originator_type" varchar(255)) [0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("altered_adjustments")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_adjustments_on_order_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("adjustments")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_adjustments_on_order_id" ON "adjustments" ("order_id")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_adjustments"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_adjustments"[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213369')
+Migrating to ResponseCodeAndAvsResponseForPayments (20120424213370)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "payments" ADD "response_code" varchar(255)[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "payments" ADD "avs_response" varchar(255)
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213370')[0m
+Migrating to ChangeGuestFlagToAnonymous (20120424213371)
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128), "salt" varchar(128), "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255), "anonymous" boolean) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_persistence_token')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_users_on_openid_identifier')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_users")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "temp_index_altered_users_on_persistence_token" ON "altered_users" ("persistence_token")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_users_on_persistence_token')[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "temp_index_altered_users_on_openid_identifier" ON "altered_users" ("openid_identifier")
+  [1m[36m (0.2ms)[0m  [1mSELECT * FROM "users"[0m
+  [1m[35m (0.6ms)[0m  DROP TABLE "users"
+  [1m[36m (0.4ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128), "salt" varchar(128), "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255), "anonymous" boolean) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_users_on_openid_identifier')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('temp_index_altered_users_on_persistence_token')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("users")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_users_on_openid_identifier" ON "users" ("openid_identifier")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_openid_identifier')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_users_on_persistence_token" ON "users" ("persistence_token")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_users"
+  [1m[36m (0.3ms)[0m  [1mDROP TABLE "altered_users"[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213371')
+Migrating to EmailForOrders (20120424213372)
+  [1m[36m (1.0ms)[0m  [1mALTER TABLE "orders" ADD "email" varchar(255)[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213372')
+Migrating to CreateMailMethods (20120424213373)
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "mail_methods" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "environment" varchar(255), "active" boolean DEFAULT 't', "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213373')
+Migrating to RenameFrozenToLocked (20120424213374)
+  [1m[36m (0.3ms)[0m  [1mCREATE TEMPORARY TABLE "altered_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "source_id" integer, "amount" decimal, "label" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "locked" boolean, "originator_id" integer, "originator_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("adjustments")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_adjustments_on_order_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_adjustments")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "temp_index_altered_adjustments_on_order_id" ON "altered_adjustments" ("order_id")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "adjustments"
+  [1m[36m (0.4ms)[0m  [1mDROP TABLE "adjustments"[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "source_id" integer, "amount" decimal, "label" varchar(255), "source_type" varchar(255), "order_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "locked" boolean, "originator_id" integer, "originator_type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_adjustments")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('temp_index_altered_adjustments_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("adjustments")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_adjustments_on_order_id" ON "adjustments" ("order_id")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "altered_adjustments"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "altered_adjustments"
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213374')[0m
+Migrating to MoveSpecialInstructionsToOrders (20120424213375)
+  [1m[35m (0.6ms)[0m  ALTER TABLE "orders" ADD "special_instructions" text
+  [1m[36m (0.1ms)[0m  [1mUPDATE orders SET special_instructions = (SELECT special_instructions FROM checkouts WHERE order_id = orders.id)[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213375')
+Migrating to CreateLogEntries (20120424213376)
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "log_entries" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "source_id" integer, "source_type" varchar(255), "details" text, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213376')
+Migrating to MigrateTransactionsToPaymentState (20120424213377)
+  [1m[36mTransaction Load (0.8ms)[0m  [1mSELECT * FROM transactions GROUP BY payment_id HAVING COUNT(payment_id) = 1 AND txn_type = 1[0m
+  [1m[35mTransaction Load (0.1ms)[0m  SELECT * FROM transactions WHERE txn_type = 4
+  [1m[36mTransaction Load (0.1ms)[0m  [1mSELECT * FROM transactions WHERE txn_type = 2[0m
+  [1m[35mTransaction Load (0.1ms)[0m  SELECT * FROM transactions WHERE txn_type = 3
+  [1m[36mTransaction Load (0.5ms)[0m  [1mSELECT * FROM transactions WHERE txn_type = 5[0m
+  [1m[35m (1.0ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213377')
+Migrating to DeleteInProgressOrders (20120424213378)
+  [1m[36m (0.1ms)[0m  [1mDELETE FROM orders WHERE orders.state = 'in_progress'[0m
+  [1m[35m (0.1ms)[0m  DELETE FROM adjustments WHERE order_id NOT IN (SELECT id FROM orders)
+  [1m[36m (0.1ms)[0m  [1mDELETE FROM checkouts WHERE order_id NOT IN (SELECT id FROM orders)[0m
+  [1m[35m (0.1ms)[0m  DELETE FROM shipments WHERE order_id NOT IN (SELECT id FROM orders)
+  [1m[36m (0.1ms)[0m  [1mDELETE FROM payments WHERE order_id NOT IN (SELECT id FROM orders)[0m
+  [1m[35m (0.1ms)[0m  DELETE FROM line_items WHERE order_id NOT IN (SELECT id FROM orders)
+  [1m[36m (0.1ms)[0m  [1mDELETE FROM inventory_units WHERE order_id NOT IN (SELECT id FROM orders)[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213378')
+Migrating to MigrateCheckoutToOrders (20120424213379)
+  [1m[36m (0.2ms)[0m  [1mSELECT * FROM orders[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213379')
+Migrating to RemoveShippedState (20120424213380)
+  [1m[36m (0.1ms)[0m  [1mUPDATE orders SET state = 'complete' WHERE state = 'shipped'[0m
+  [1m[35m (0.1ms)[0m  SELECT shipments.id FROM shipments WHERE order_id IN (SELECT orders.id FROM orders WHERE orders.state = 'shipped')
+  [1m[36m (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213380')[0m
+Migrating to PreventNilPaymentTotal (20120424213381)
+  [1m[35m (0.1ms)[0m  UPDATE orders SET payment_total = 0.0 WHERE payment_total IS NULL
+  [1m[36m (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213381')[0m
+Migrating to PreventNilEmail (20120424213382)
+  [1m[35m (0.1ms)[0m  UPDATE orders SET email = 'guest@example.com' WHERE email IS NULL
+  [1m[36m (0.1ms)[0m  [1mUPDATE orders SET email = 'guest@example.com' WHERE email = ''[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213382')
+Migrating to GenerateAnonymousUsers (20120424213383)
+  [1m[36mSpree::Order Load (0.1ms)[0m  [1mSELECT "orders".* FROM "orders" WHERE "orders"."user_id" IS NULL[0m
+  [1m[35m (0.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213383')
+Migrating to UpdateOrderState (20120424213384)
+  [1m[36mSpree::Order Load (0.2ms)[0m  [1mSELECT "orders".* FROM "orders" [0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213384')
+Migrating to CleanupLegacyTables (20120424213385)
+  [1m[36m (0.6ms)[0m  [1mDROP TABLE "checkouts"[0m
+  [1m[35m (0.5ms)[0m  DROP TABLE "transactions"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "open_id_authentication_associations"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "open_id_authentication_nonces"
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213385')[0m
+Migrating to RemoveNumberAndCvvFromCredicard (20120424213386)
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_creditcards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "number" text, "verification_value" text, "month" varchar(255), "year" varchar(255), "cc_type" varchar(255), "last_digits" varchar(255), "first_name" varchar(255), "last_name" varchar(255), "start_month" varchar(255), "start_year" varchar(255), "issue_number" varchar(255), "address_id" integer, "created_at" datetime, "updated_at" datetime, "gateway_customer_profile_id" varchar(255), "gateway_payment_profile_id" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("creditcards")[0m
+  [1m[35m (0.2ms)[0m  SELECT * FROM "creditcards"
+  [1m[36m (0.4ms)[0m  [1mDROP TABLE "creditcards"[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "creditcards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "verification_value" text, "month" varchar(255), "year" varchar(255), "cc_type" varchar(255), "last_digits" varchar(255), "first_name" varchar(255), "last_name" varchar(255), "start_month" varchar(255), "start_year" varchar(255), "issue_number" varchar(255), "address_id" integer, "created_at" datetime, "updated_at" datetime, "gateway_customer_profile_id" varchar(255), "gateway_payment_profile_id" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_creditcards")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_creditcards"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_creditcards"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_creditcards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "verification_value" text, "month" varchar(255), "year" varchar(255), "cc_type" varchar(255), "last_digits" varchar(255), "first_name" varchar(255), "last_name" varchar(255), "start_month" varchar(255), "start_year" varchar(255), "issue_number" varchar(255), "address_id" integer, "created_at" datetime, "updated_at" datetime, "gateway_customer_profile_id" varchar(255), "gateway_payment_profile_id" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("creditcards")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "creditcards"
+  [1m[36m (0.6ms)[0m  [1mDROP TABLE "creditcards"[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "creditcards" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "month" varchar(255), "year" varchar(255), "cc_type" varchar(255), "last_digits" varchar(255), "first_name" varchar(255), "last_name" varchar(255), "start_month" varchar(255), "start_year" varchar(255), "issue_number" varchar(255), "address_id" integer, "created_at" datetime, "updated_at" datetime, "gateway_customer_profile_id" varchar(255), "gateway_payment_profile_id" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_creditcards")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_creditcards"
+  [1m[36m (0.1ms)[0m  [1mDROP TABLE "altered_creditcards"[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213386')
+Migrating to DropAnonymousFieldForUser (20120424213387)
+  [1m[36m (0.8ms)[0m  [1mCREATE TEMPORARY TABLE "altered_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128), "salt" varchar(128), "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255), "anonymous" boolean) [0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_users_on_persistence_token')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_openid_identifier')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_users")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "temp_index_altered_users_on_persistence_token" ON "altered_users" ("persistence_token")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('temp_index_altered_users_on_persistence_token')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "temp_index_altered_users_on_openid_identifier" ON "altered_users" ("openid_identifier")[0m
+  [1m[35m (0.2ms)[0m  SELECT * FROM "users"
+  [1m[36m (0.5ms)[0m  [1mDROP TABLE "users"[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "crypted_password" varchar(128), "salt" varchar(128), "email" varchar(255), "remember_token" varchar(255), "remember_token_expires_at" varchar(255), "persistence_token" varchar(255), "single_access_token" varchar(255), "perishable_token" varchar(255), "login_count" integer DEFAULT 0 NOT NULL, "failed_login_count" integer DEFAULT 0 NOT NULL, "last_request_at" datetime, "current_login_at" datetime, "last_login_at" datetime, "current_login_ip" varchar(255), "last_login_ip" varchar(255), "login" varchar(255), "ship_address_id" integer, "bill_address_id" integer, "created_at" datetime, "updated_at" datetime, "openid_identifier" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('temp_index_altered_users_on_openid_identifier')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_users_on_persistence_token')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("users")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_users_on_openid_identifier" ON "users" ("openid_identifier")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_users_on_openid_identifier')[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_users_on_persistence_token" ON "users" ("persistence_token")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "altered_users"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "altered_users"
+  [1m[36m (0.6ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213387')[0m
+Migrating to RenamedRmaCancelledState (20120424213388)
+  [1m[35m (0.1ms)[0m  UPDATE return_authorizations SET state = 'canceled' WHERE state = 'cancelled'
+  [1m[36m (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213388')[0m
+Migrating to FixProblematicIndexNames (20120424213389)
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("preferences")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("preferences")[0m
+  [1m[35m (0.4ms)[0m  CREATE UNIQUE INDEX "ix_prefs_on_owner_attr_pref" ON "preferences" ("owner_id", "owner_type", "name", "group_id", "group_type")
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213389')[0m
+Migrating to AddPositionToVariants (20120424213390)
+  [1m[35m (0.5ms)[0m  ALTER TABLE "variants" ADD "position" integer
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213390')[0m
+Migrating to AddNextStateToStateEvents (20120424213391)
+  [1m[35m (0.5ms)[0m  ALTER TABLE "state_events" ADD "next_state" varchar(255)
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213391')[0m
+Migrating to AddPositionToOptionTypes (20120424213392)
+  [1m[35m (0.6ms)[0m  ALTER TABLE "option_types" ADD "position" integer DEFAULT 0 NOT NULL
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213392')[0m
+Migrating to RemoveTrailingSlashesInTaxonPermalinks (20120424213393)
+  [1m[35m (0.2ms)[0m  SELECT * FROM taxons
+  [1m[36m (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213393')[0m
+Migrating to CreateActivators (20120424213394)
+  [1m[35m (0.5ms)[0m  CREATE TABLE "activators" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" varchar(255), "expires_at" datetime, "created_at" datetime, "updated_at" datetime, "starts_at" datetime, "name" varchar(255), "event_name" varchar(255), "type" varchar(255)) 
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213394')[0m
+Migrating to EligibleForAdjustments (20120424213395)
+  [1m[35m (1.2ms)[0m  ALTER TABLE "adjustments" ADD "eligible" boolean DEFAULT 't'
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213395')[0m
+Migrating to NamespaceTopLevelModels (20120424213396)
+  [1m[35m (0.6ms)[0m  ALTER TABLE "activators" RENAME TO "spree_activators"
+  [1m[36m (0.4ms)[0m  [1mALTER TABLE "addresses" RENAME TO "spree_addresses"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "adjustments" RENAME TO "spree_adjustments"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "configurations" RENAME TO "spree_configurations"[0m
+  [1m[35m (0.4ms)[0m  ALTER TABLE "assets" RENAME TO "spree_assets"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "calculators" RENAME TO "spree_calculators"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "countries" RENAME TO "spree_countries"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "creditcards" RENAME TO "spree_creditcards"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "gateways" RENAME TO "spree_gateways"
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "inventory_units" RENAME TO "spree_inventory_units"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "line_items" RENAME TO "spree_line_items"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "log_entries" RENAME TO "spree_log_entries"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "mail_methods" RENAME TO "spree_mail_methods"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "option_types" RENAME TO "spree_option_types"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "option_values" RENAME TO "spree_option_values"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "option_types_prototypes" RENAME TO "spree_option_types_prototypes"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "option_values_variants" RENAME TO "spree_option_values_variants"
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "orders" RENAME TO "spree_orders"[0m
+  [1m[35m (0.4ms)[0m  ALTER TABLE "payments" RENAME TO "spree_payments"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "payment_methods" RENAME TO "spree_payment_methods"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "preferences" RENAME TO "spree_preferences"
+  [1m[36m (0.4ms)[0m  [1mALTER TABLE "products" RENAME TO "spree_products"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "product_groups" RENAME TO "spree_product_groups"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "product_groups_products" RENAME TO "spree_product_groups_products"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "product_option_types" RENAME TO "spree_product_option_types"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "product_properties" RENAME TO "spree_product_properties"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "product_scopes" RENAME TO "spree_product_scopes"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "products_taxons" RENAME TO "spree_products_taxons"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "properties" RENAME TO "spree_properties"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "prototypes" RENAME TO "spree_prototypes"[0m
+  [1m[35m (0.4ms)[0m  ALTER TABLE "properties_prototypes" RENAME TO "spree_properties_prototypes"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "return_authorizations" RENAME TO "spree_return_authorizations"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "roles" RENAME TO "spree_roles"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "roles_users" RENAME TO "spree_roles_users"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "shipments" RENAME TO "spree_shipments"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "shipping_categories" RENAME TO "spree_shipping_categories"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "shipping_methods" RENAME TO "spree_shipping_methods"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "states" RENAME TO "spree_states"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "state_events" RENAME TO "spree_state_events"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "tax_categories" RENAME TO "spree_tax_categories"[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "tax_rates" RENAME TO "spree_tax_rates"
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "taxons" RENAME TO "spree_taxons"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "taxonomies" RENAME TO "spree_taxonomies"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "trackers" RENAME TO "spree_trackers"[0m
+  [1m[35m (0.4ms)[0m  ALTER TABLE "users" RENAME TO "spree_users"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "variants" RENAME TO "spree_variants"[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "zones" RENAME TO "spree_zones"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "zone_members" RENAME TO "spree_zone_members"[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213396')
+Migrating to MigrateNamespacedPolymorphicModels (20120424213397)
+  [1m[36m (0.2ms)[0m  [1mUPDATE spree_payments SET source_type = ('Spree::' || source_type) where source_type NOT LIKE 'Spree::%' AND source_type IS NOT NULL[0m
+  [1m[35m (0.1ms)[0m  UPDATE spree_adjustments SET source_type = ('Spree::' || source_type) where source_type NOT LIKE 'Spree::%' AND source_type IS NOT NULL
+  [1m[36m (0.1ms)[0m  [1mUPDATE spree_log_entries SET source_type = ('Spree::' || source_type) where source_type NOT LIKE 'Spree::%' AND source_type IS NOT NULL[0m
+  [1m[35m (0.1ms)[0m  UPDATE spree_adjustments SET originator_type = ('Spree::' || originator_type) where originator_type NOT LIKE 'Spree::%' AND originator_type IS NOT NULL
+  [1m[36m (0.1ms)[0m  [1mUPDATE spree_calculators SET calculable_type = ('Spree::' || calculable_type) where calculable_type NOT LIKE 'Spree::%' AND calculable_type IS NOT NULL[0m
+  [1m[35m (0.1ms)[0m  UPDATE spree_preferences SET owner_type = ('Spree::' || owner_type) where owner_type NOT LIKE 'Spree::%' AND owner_type IS NOT NULL
+  [1m[36m (0.1ms)[0m  [1mUPDATE spree_state_events SET stateful_type = ('Spree::' || stateful_type) where stateful_type NOT LIKE 'Spree::%' AND stateful_type IS NOT NULL[0m
+  [1m[35m (0.1ms)[0m  UPDATE spree_activators SET type = ('Spree::' || type) where type NOT LIKE 'Spree::%' AND type IS NOT NULL
+  [1m[36m (0.1ms)[0m  [1mUPDATE spree_assets SET type = ('Spree::' || type) where type NOT LIKE 'Spree::%' AND type IS NOT NULL[0m
+  [1m[35m (0.1ms)[0m  UPDATE spree_calculators SET type = ('Spree::' || type) where type NOT LIKE 'Spree::%' AND type IS NOT NULL
+  [1m[36m (0.1ms)[0m  [1mUPDATE spree_configurations SET type = ('Spree::' || type) where type NOT LIKE 'Spree::%' AND type IS NOT NULL[0m
+  [1m[35m (0.1ms)[0m  UPDATE spree_gateways SET type = ('Spree::' || type) where type NOT LIKE 'Spree::%' AND type IS NOT NULL
+  [1m[36m (0.1ms)[0m  [1mUPDATE spree_payment_methods SET type = ('Spree::' || type) where type NOT LIKE 'Spree::%' AND type IS NOT NULL[0m
+  [1m[35m (0.5ms)[0m  UPDATE spree_assets SET viewable_type = ('Spree::' || viewable_type) where viewable_type NOT LIKE 'Spree::%' AND viewable_type IS NOT NULL
+  [1m[36m (0.1ms)[0m  [1mUPDATE spree_zone_members SET zoneable_type = ('Spree::' || zoneable_type) where zoneable_type NOT LIKE 'Spree::%' AND zoneable_type IS NOT NULL[0m
+  [1m[35m (0.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213397')
+Migrating to MakeAdjustmentsPolymorphic (20120424213398)
+  [1m[36m (0.6ms)[0m  [1mALTER TABLE "spree_adjustments" ADD "adjustable_type" varchar(255)[0m
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_spree_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "source_id" integer, "amount" decimal, "label" varchar(255), "source_type" varchar(255), "adjustable_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "locked" boolean, "originator_id" integer, "originator_type" varchar(255), "eligible" boolean DEFAULT 't', "adjustable_type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_adjustments")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_adjustments_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_spree_adjustments")[0m
+  [1m[35m (0.1ms)[0m  CREATE INDEX "temp_index_adjustments_on_order_id" ON "altered_spree_adjustments" ("adjustable_id")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "spree_adjustments"[0m
+  [1m[35m (0.9ms)[0m  DROP TABLE "spree_adjustments"
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "spree_adjustments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "source_id" integer, "amount" decimal, "label" varchar(255), "source_type" varchar(255), "adjustable_id" integer, "created_at" datetime, "updated_at" datetime, "mandatory" boolean, "locked" boolean, "originator_id" integer, "originator_type" varchar(255), "eligible" boolean DEFAULT 't', "adjustable_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_spree_adjustments")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_adjustments_on_order_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_adjustments")
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_adjustments_on_order_id" ON "spree_adjustments" ("adjustable_id")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_spree_adjustments"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_spree_adjustments"[0m
+  [1m[35m (0.1ms)[0m  UPDATE spree_adjustments SET adjustable_type = 'Spree::Order'
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213398')[0m
+Migrating to AddCompanyToAddresses (20120424213399)
+  [1m[35m (0.6ms)[0m  ALTER TABLE "spree_addresses" ADD "company" varchar(255)
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213399')[0m
+Migrating to AddIncTaxToTaxRates (20120424213400)
+  [1m[35m (0.5ms)[0m  ALTER TABLE "spree_tax_rates" ADD "inc_tax" boolean DEFAULT 'f'
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213400')[0m
+Migrating to RenameIncPriceAttribute (20120424213401)
+  [1m[35m (0.6ms)[0m  CREATE TEMPORARY TABLE "altered_spree_tax_rates" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal, "zone_id" integer, "tax_category_id" integer, "created_at" datetime, "updated_at" datetime, "included_in_price" boolean DEFAULT 'f') 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_tax_rates")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "spree_tax_rates"
+  [1m[36m (0.4ms)[0m  [1mDROP TABLE "spree_tax_rates"[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "spree_tax_rates" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "amount" decimal, "zone_id" integer, "tax_category_id" integer, "created_at" datetime, "updated_at" datetime, "included_in_price" boolean DEFAULT 'f') 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_spree_tax_rates")[0m
+  [1m[35m (1.4ms)[0m  SELECT * FROM "altered_spree_tax_rates"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_spree_tax_rates"[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213401')
+Migrating to AddDefaultTaxZone (20120424213402)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "spree_zones" ADD "default_tax" boolean DEFAULT 'f'[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213402')
+Migrating to AssociateShippingMethodsAndShippingCategories (20120424213403)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "spree_shipping_methods" ADD "shipping_category_id" integer[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213403')
+Migrating to AddMatchRulesToShippingMethods (20120424213404)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "spree_shipping_methods" ADD "match_none" boolean[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "spree_shipping_methods" ADD "match_all" boolean
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "spree_shipping_methods" ADD "match_one" boolean[0m
+  [1m[35m (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20120424213404')
+Migrating to NewPreferences (20120424213405)
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "spree_preferences" ADD "key" varchar(255)[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "spree_preferences" ADD "value_type" varchar(255)
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("spree_preferences")[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_info('ix_prefs_on_owner_attr_pref')
+  [1m[36m (0.7ms)[0m  [1mCREATE UNIQUE INDEX "index_spree_preferences_on_key" ON "spree_preferences" ("key")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_preferences")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_spree_preferences_on_key')[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_info('ix_prefs_on_owner_attr_pref')
+  [1m[36m (0.2ms)[0m  [1mDROP INDEX "ix_prefs_on_owner_attr_pref"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100) NOT NULL, "owner_id" integer(30) NOT NULL, "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_preferences")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_spree_preferences_on_key')
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("altered_spree_preferences")[0m
+  [1m[35m (0.2ms)[0m  CREATE UNIQUE INDEX "temp_index_altered_spree_preferences_on_key" ON "altered_spree_preferences" ("key")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "spree_preferences"[0m
+  [1m[35m (0.3ms)[0m  DROP TABLE "spree_preferences"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "owner_id" integer(30) NOT NULL, "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_spree_preferences")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_spree_preferences_on_key')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_preferences")
+  [1m[36m (0.2ms)[0m  [1mCREATE UNIQUE INDEX "index_spree_preferences_on_key" ON "spree_preferences" ("key")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_spree_preferences"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_spree_preferences"[0m
+  [1m[35m (0.3ms)[0m  CREATE TEMPORARY TABLE "altered_spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "owner_id" integer(30) NOT NULL, "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_preferences")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_spree_preferences_on_key')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_spree_preferences")[0m
+  [1m[35m (0.2ms)[0m  CREATE UNIQUE INDEX "temp_index_altered_spree_preferences_on_key" ON "altered_spree_preferences" ("key")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "spree_preferences"[0m
+  [1m[35m (0.3ms)[0m  DROP TABLE "spree_preferences"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "owner_id" integer(30), "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_spree_preferences")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_spree_preferences_on_key')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_preferences")
+  [1m[36m (0.2ms)[0m  [1mCREATE UNIQUE INDEX "index_spree_preferences_on_key" ON "spree_preferences" ("key")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_spree_preferences"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_spree_preferences"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "owner_id" integer(30), "owner_type" varchar(50) NOT NULL, "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_preferences")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_spree_preferences_on_key')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_spree_preferences")[0m
+  [1m[35m (0.2ms)[0m  CREATE UNIQUE INDEX "temp_index_altered_spree_preferences_on_key" ON "altered_spree_preferences" ("key")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "spree_preferences"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "spree_preferences"
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "owner_id" integer(30), "owner_type" varchar(50), "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_spree_preferences")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_spree_preferences_on_key')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_preferences")
+  [1m[36m (0.2ms)[0m  [1mCREATE UNIQUE INDEX "index_spree_preferences_on_key" ON "spree_preferences" ("key")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_spree_preferences"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_spree_preferences"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "owner_id" integer(30), "owner_type" varchar(50), "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) 
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("spree_preferences")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_spree_preferences_on_key')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_spree_preferences")[0m
+  [1m[35m (0.2ms)[0m  CREATE UNIQUE INDEX "temp_index_altered_spree_preferences_on_key" ON "altered_spree_preferences" ("key")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "spree_preferences"[0m
+  [1m[35m (0.3ms)[0m  DROP TABLE "spree_preferences"
+  [1m[36m (0.3ms)[0m  [1mCREATE TABLE "spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "owner_id" integer(30), "owner_type" varchar(50), "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) [0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("altered_spree_preferences")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_spree_preferences_on_key')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_preferences")
+  [1m[36m (0.2ms)[0m  [1mCREATE UNIQUE INDEX "index_spree_preferences_on_key" ON "spree_preferences" ("key")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_spree_preferences"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_spree_preferences"[0m
+  [1m[35m (0.2ms)[0m  CREATE TEMPORARY TABLE "altered_spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "owner_id" integer(30), "owner_type" varchar(50), "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) 
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_preferences")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_spree_preferences_on_key')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("altered_spree_preferences")[0m
+  [1m[35m (0.2ms)[0m  CREATE UNIQUE INDEX "temp_index_altered_spree_preferences_on_key" ON "altered_spree_preferences" ("key")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "spree_preferences"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "spree_preferences"
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "spree_preferences" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(100), "owner_id" integer(30), "owner_type" varchar(50), "group_id" integer, "group_type" varchar(50), "value" text(255), "created_at" datetime, "updated_at" datetime, "key" varchar(255), "value_type" varchar(255)) [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("altered_spree_preferences")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('temp_index_altered_spree_preferences_on_key')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_preferences")
+  [1m[36m (0.2ms)[0m  [1mCREATE UNIQUE INDEX "index_spree_preferences_on_key" ON "spree_preferences" ("key")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "altered_spree_preferences"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "altered_spree_preferences"[0m
+  [1m[35m (0.1ms)[0m  select id, type from spree_configurations
+  [1m[36m (0.1ms)[0m  [1mselect id, owner_id, name from spree_preferences where owner_type = 'Spree::Configuration'[0m
+  [1m[35mSpree::Preference Load (0.1ms)[0m  SELECT "spree_preferences".* FROM "spree_preferences" WHERE "spree_preferences"."owner_type" = 'Spree::Calculator'
+  [1m[36mSpree::OldPrefs Load (0.1ms)[0m  [1mSELECT "spree_preferences".* FROM "spree_preferences" WHERE "spree_preferences"."key" IS NULL[0m
+  [1m[35mSQL (0.1ms)[0m  UPDATE "spree_preferences" SET "value_type" = 'string' WHERE "spree_preferences"."value_type" IS NULL
+  [1m[36m (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213405')[0m
+Migrating to AddDeletedAtToTaxCategory (20120424213406)
+  [1m[35m (0.5ms)[0m  ALTER TABLE "spree_tax_categories" ADD "deleted_at" datetime
+  [1m[36m (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20120424213406')[0m
+  [1m[35m (1.8ms)[0m  select sqlite_version(*)
+  [1m[36m (0.4ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations" [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("coupons")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_activators")[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("spree_addresses")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_addresses_on_lastname')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_addresses_on_firstname')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_adjustments")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_adjustments_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_assets")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_assets_on_viewable_type_and_type')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_assets_on_viewable_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_calculators")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_configurations")[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_info('index_configurations_on_name_and_type')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_countries")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_creditcards")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_gateways")[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("spree_inventory_units")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_inventory_units_on_shipment_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_inventory_units_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_inventory_units_on_variant_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_line_items")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_line_items_on_variant_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_line_items_on_order_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_log_entries")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_mail_methods")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_option_types")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_option_types_prototypes")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_option_values")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_option_values_variants")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_option_values_variants_on_variant_id_and_option_value_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_option_values_variants_on_variant_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_orders")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_orders_on_number')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_payment_methods")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_payments")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_preferences")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_spree_preferences_on_key')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_product_groups")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_product_groups_on_permalink')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_product_groups_on_name')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_product_groups_products")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_product_option_types")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_product_properties")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_product_properties_on_product_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_product_scopes")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_product_scopes_on_product_group_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_product_scopes_on_name')
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("spree_products")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_products_on_permalink')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_products_on_name')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_products_on_deleted_at')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_products_on_available_on')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_products_taxons")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_products_taxons_on_taxon_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_products_taxons_on_product_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_properties")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_properties_prototypes")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_prototypes")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_return_authorizations")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_roles")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_roles_users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_roles_users_on_user_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_roles_users_on_role_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_shipments")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_shipments_on_number')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_shipping_categories")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_shipping_methods")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_state_events")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_states")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_tax_categories")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_tax_rates")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_taxonomies")[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("spree_taxons")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_taxons_on_taxonomy_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_taxons_on_parent_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_taxons_on_permalink')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_trackers")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_users")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_persistence_token')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_users_on_openid_identifier')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_variants")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_variants_on_product_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("spree_zone_members")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("spree_zones")[0m

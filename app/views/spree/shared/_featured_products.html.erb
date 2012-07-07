@@ -1,0 +1,39 @@
+<%
+  products = @products
+  feature_content = Spree::Feature::Config[:feature_content].dup
+%>
+
+<% if products.map(&:feature_product).include? true  %>
+    <div id="feature_border"><p></p></div>
+    <div id="banner-slideshow-main">
+    <div id="banner-slideshow-left">
+      <h6>Featured Products</h6>
+      <br/>
+      <%= simple_format(feature_content) %>
+    </div>
+    <div id="banner-slideshow">
+        <% products.each do |product| %>
+          <% if product.feature_product == true && (Spree::Config[:show_zero_stock_products] || product.has_stock?) %>
+              <div class="banner">
+                <div class="tagline"></div>
+                <%= link_to small_image(product, :itemprop => "name"), product %>
+                <br/>
+                <span class="price selling" itemprop="price"><%= number_to_currency product.price %></span>
+                <br/>
+                <%= product.name %>
+              </div>
+           <% end %>
+        <% end %>
+    </div>
+    </div>
+<% end %>
+
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function() {
+    $('#banner-slideshow').cycle({
+		fx: 'scrollUp', // choose your transition type, ex: fade, scrollUp, shuffle, etc...
+		speed: 2000,
+		timeout: 5000
+	});
+});
+</script>

@@ -1,0 +1,22 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  ext_homepager:
+    show_on_homepage: "Show on homepage"
+  banners: Banners
+  banner: Banner
+  listing_banners: Listing banners
+  position: Position
+  tagline: Tagline
+  target_url: Target URL
+  new_banner: New banner
+  editing_banner: Editing banner
+  reorder: Reorder
+  reorder_explain: Drag the banners up and down to adjust the order in which they are displayed
+  visible: Visible
+  drag: drag
+  feature:
+    feature_settings: "Feature Settings"
+    feature_settings_description: "Amend the settings description"
+    feature_description: "Feature description"

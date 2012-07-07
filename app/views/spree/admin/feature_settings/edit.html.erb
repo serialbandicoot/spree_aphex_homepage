@@ -1,0 +1,15 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<h1><%= t('feature.feature_settings') %></h1>
+
+<%= form_tag(admin_feature_settings_path, :method => :put) do -%>
+  <p>
+    <label><%= t('feature.feature_description') %>:</label>
+    <br/>
+    <%= text_area_tag('preferences[feature_content]', Spree::Feature::Config[:feature_content], :size => "20*10") %>
+  </p>
+  <p class="form-buttons">
+    <%= button t(:update) %>
+    <%= t(:or) %> <%= link_to t(:cancel), admin_feature_settings_url %>
+  </p>
+<% end -%>
