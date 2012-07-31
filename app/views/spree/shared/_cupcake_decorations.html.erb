@@ -1,0 +1,23 @@
+<!-- Test to see if there is a news ticker and/or slider -->
+
+<% if Spree::Slide.published.count > 0 %>
+    <% type = "_with_slide_no_ticker" %>
+<% else %>
+    <% type = "_no_slide" %>
+<% end %>
+
+<div id="cupcake_decorations_border<%= type %>">
+  <div id="cupcake_decorations">
+      <h6>Urban Cake Lady</h6>
+       <br>
+        <div id="cupcake_decoration_text">
+             Beautiful piece of street art somewhere in Australia
+        </div>
+      <br>
+      <a href="/"><img align="center" width=200px; height=170px; src="/assets/store/urban_cake_lady.png" alt="urban_cake_lady"></a>
+
+      <br/>
+  </div>
+</div>
+
+
